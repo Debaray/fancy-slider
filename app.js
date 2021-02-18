@@ -6,10 +6,13 @@ const searchBtn = document.getElementById('search-btn');
 const sliderDurationBox = document.getElementById('duration');
 const sliderBtn = document.getElementById('create-slider');
 const sliderContainer = document.getElementById('sliders');
+const selectedImageTag = document.getElementById('selected-image');
+const selectedImageCount = document.getElementById('selected-image-count');
+
 // selected image 
 let sliders = [];
 
-
+selectedImageTag.style.display="none";
 // If this key doesn't work
 // Find the name in the url and go to their website
 // to create your own api key
@@ -42,6 +45,8 @@ const showImages = (images) => {
     div.className = 'col-lg-3 col-md-4 col-xs-6 img-item mb-2';
     div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
     gallery.appendChild(div)
+    selectedImageTag.style.display="block";
+    selectedImageCount.innerText =sliders.length; 
   })
 
 }
@@ -62,9 +67,11 @@ const selectItem = (event, img) => {
   let item = sliders.indexOf(img);
   if (item === -1) {
     sliders.push(img);
+    selectedImageCount.innerText =sliders.length; 
   } else {
     sliders.splice(item, 1);
     element.classList.remove('added');
+    selectedImageCount.innerText =sliders.length; 
   }
 }
 var timer
@@ -96,7 +103,8 @@ const createSlider = () => {
   document.querySelector('.main').style.display = 'block';
   // hide image aria
   imagesArea.style.display = 'none';
- 
+  selectedImageTag.style.display="none";
+  selectedImageCount.innerText ="0"; 
   
   sliders.forEach(slide => {
     let item = document.createElement('div')
