@@ -8,11 +8,13 @@ const sliderBtn = document.getElementById('create-slider');
 const sliderContainer = document.getElementById('sliders');
 const selectedImageTag = document.getElementById('selected-image');
 const selectedImageCount = document.getElementById('selected-image-count');
+const noDataDiv = document.getElementById('no-data-found');
+const createSlideDuration = document.getElementById('create-slide-duration');
 
 // selected image 
 let sliders = [];
+selectedImageTag.style.display ='none';
 
-selectedImageTag.style.display="none";
 // If this key doesn't work
 // Find the name in the url and go to their website
 // to create your own api key
@@ -33,19 +35,32 @@ sliderDurationBox.addEventListener('keypress',function(event){
   }
 }) 
 
+const displayControl =(element, display) =>{
+ element.style.display =`${display}`;
+}
 
 // show images 
 const showImages = (images) => {
-  imagesArea.style.display = 'block';
+  if(images.length === 0)
+  {
+    isDisplayMealEmpty();
+    return;
+  }
+  displayControl(imagesArea,'block');
+  displayControl(noDataDiv,'none');
+  displayControl(createSlideDuration,'flex');
+  displayControl(gallery,'flex');
+  
   gallery.innerHTML = '';
   // show gallery title
-  galleryHeader.style.display = 'flex';
+  displayControl(galleryHeader,'flex');
   images.forEach(image => {
     let div = document.createElement('div');
     div.className = 'col-lg-3 col-md-4 col-xs-6 img-item mb-2';
     div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
     gallery.appendChild(div)
-    selectedImageTag.style.display="block";
+    displayControl(selectedImageTag,'block');
+    
     selectedImageCount.innerText =sliders.length; 
   })
 
@@ -102,8 +117,9 @@ const createSlider = () => {
   sliderContainer.appendChild(prevNext)
   document.querySelector('.main').style.display = 'block';
   // hide image aria
-  imagesArea.style.display = 'none';
-  selectedImageTag.style.display="none";
+  displayControl(imagesArea,'none');
+  displayControl(selectedImageTag,'none');
+
   selectedImageCount.innerText ="0"; 
   
   sliders.forEach(slide => {
@@ -147,6 +163,23 @@ const changeSlide = (index) => {
   items[index].style.display = "block"
 }
 
+const isDisplayMealEmpty = () => {
+ 
+  displayControl(noDataDiv,'block');
+  displayControl(gallery,'none');
+  displayControl(createSlideDuration,'none');
+  displayControl(selectedImageTag,'none');
+      selectedImageCount.innerText ="0"; 
+      const createNoDataDiv = document.createElement('div');
+      noDataDiv.innerHTML = "";
+      const noDataInfo = `
+      <div class="mt-5 mb-5 d-flex justify-content-center">
+      <img src="images/noDataFound.webp">
+      </div>
+     `;
+      createNoDataDiv.innerHTML = noDataInfo;
+      noDataDiv.appendChild(createNoDataDiv);
+}
 searchBtn.addEventListener('click', function () {
   document.querySelector('.main').style.display = 'none';
   clearInterval(timer);
